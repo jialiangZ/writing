@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://jialiangz.github.io/writing/sitemap-index.xml

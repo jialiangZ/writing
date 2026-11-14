@@ -1,113 +1,99 @@
 # writing
 
-写作站。Astro 静态站，部署在 GitHub Pages 的项目页路径下：
+写作站，基于 [AstroPaper](https://github.com/satnaing/astro-paper)（MIT），部署在 GitHub Pages 的项目页路径下：
 
-- 中文：<https://jialiangz.github.io/writing/zh/>
-- English: <https://jialiangz.github.io/writing/en/>
-- RSS：`/writing/zh/rss.xml`、`/writing/en/rss.xml`
+- 站点：<https://jialiangz.github.io/writing/>
+- RSS：<https://jialiangz.github.io/writing/rss.xml>
+- 个人主页：<https://github.com/jialiangZ/jialiangZ.github.io>
 
-个人主页在另一个仓库：<https://github.com/jialiangZ/jialiangZ.github.io>
+## 语言：由内容决定
 
-## 目录结构
+站点只有一套 URL，**没有 `/zh` `/en` 前缀**。每篇文章在 frontmatter 里声明 `lang`，页面语言、日期格式和界面文案都跟着文章走：
 
-```
-src/
-├── content/writing/          # 文章正文（Markdown）
-│   ├── zh/                   # 中文
-│   └── en/                   # 英文
-├── components/               # 页面与展示组件（按语言复用同一套）
-├── i18n/
-│   ├── ui.ts                 # 界面文案（两种语言）
-│   └── tags.ts               # 标签 slug → 显示名
-├── layouts/Base.astro        # HTML 外壳、<head>、hreflang
-├── lib/                      # 文章查询、URL 生成、阅读时长
-├── pages/
-│   ├── index.astro           # /writing/ → 跳转到 /writing/zh/
-│   ├── zh/  en/              # 两种语言的路由（结构完全对称）
-└── styles/main.scss
-```
+- 中文文章 → `<html lang="zh">`、`2026年10月18日`、中文界面
+- 英文文章 → `<html lang="en">`、`18 Oct, 2026`、英文界面
+- 首页、文章列表、标签、归档等页面使用 `astro-paper.config.ts` 里的 `site.lang`（当前是 `zh`）
 
-URL 一律带语言前缀，中英对称：
-
-| 路径 | 内容 |
-| --- | --- |
-| `/writing/zh/` | 中文首页 |
-| `/writing/zh/<slug>/` | 中文文章 |
-| `/writing/zh/tags/<tag>/` | 中文标签页 |
-| `/writing/en/...` | 英文的同一套页面 |
+同一篇文章的中英两个版本用 `translationKey` 关联，文章页会自动给出跳转链接。
 
 ## 写一篇新文章
 
-在 `src/content/writing/<locale>/` 下新建 `.md`（或 `.mdx`）文件，文件名即 URL slug（建议用小写英文加连字符）：
+在 `src/content/posts/` 下新建 `.md`（或 `.mdx`），文件名即 URL slug：
 
 ```markdown
 ---
 title: "标题"
-description: "一句话摘要，用于列表页和 SEO。"
-pubDate: 2026-11-14
-locale: zh              # zh | en
-kind: longform          # longform（长文）| note（短笔记）
-tags: [mllm, streaming] # 标签 slug，见 src/i18n/tags.ts
-translationKey: my-post # 与另一语言的同一篇文章保持一致
-draft: false            # true 时不发布
+description: "一句话摘要，用于列表页、SEO 和 RSS。"
+pubDatetime: 2026-11-14
+lang: zh                  # zh | en，决定页面语言
+kind: longform            # longform（长文）| note（短笔记）
+tags: ["mllm", "streaming"]
+translationKey: my-post   # 可选，与另一语言的同一篇文章保持一致
+draft: false              # 可选，true 时不发布
 ---
 
 正文……
 ```
 
-提交并推送到 `main` 后，GitHub Actions 会自动构建并发布。
+其他可选字段：`modDatetime`（更新日期）、`featured`（首页精选）、`ogImage`（自定义分享图）、`hideToc`、`canonicalURL`。
 
-### 中英对照
-
-同一篇文章的两个语言版本 **slug 保持一致**，并使用相同的 `translationKey`：
-
-- `src/content/writing/zh/my-post.md`
-- `src/content/writing/en/my-post.md`
-
-站点会据此在文章页顶部给出语言切换入口，并在 `<head>` 中输出 `hreflang` 互指。没有对应翻译的文章不会出现在另一种语言的列表里。
+提交并推送到 `main` 后，GitHub Actions 会构建（含 Pagefind 索引）并发布。
 
 ### 数学公式与代码
 
-Markdown 里直接写 LaTeX：
+Markdown 里直接写 LaTeX，由 `remark-math` + `rehype-katex` 渲染：
 
 ```markdown
 行内公式 $E = mc^2$
-
-块级公式
 
 $$
 \mathcal{L} = \sum_{i} \ell_i
 $$
 ```
 
-由 `remark-math` + `rehype-katex` 渲染，代码块由 Shiki 高亮。`.mdx` 文件还能使用组件（需要 `@astrojs/mdx`）。
+代码块由 Shiki 高亮，支持 ` ```js title="file.js" `、行高亮 `// [!code highlight]` 等注解。
 
-### 新增标签
+## 目录结构
 
-标签在 frontmatter 里写 ASCII slug（例如 `paper-notes`），显示名在 `src/i18n/tags.ts` 里配置：
-
-```ts
-"paper-notes": { zh: "论文笔记", en: "Paper Notes" },
 ```
-
-没有配置时直接显示 slug 本身。
+astro-paper.config.ts     # 站点配置：标题、作者、社交链接、功能开关
+astro.config.ts           # Astro 配置：site/base、i18n、Markdown 处理器
+src/content/posts/        # 文章（Markdown / MDX）
+src/content/pages/        # 独立页面（about）
+src/i18n/lang/            # 界面文案（en.ts / zh.ts）
+src/pages/                # 路由：首页、文章、标签、归档、搜索、RSS、OG 图
+src/styles/               # 主题变量与排版
+```
 
 ## 本地开发
 
 ```bash
 npm install
-npm run dev       # http://localhost:4321/writing/zh/
-npm run build     # 输出到 dist/
+npm run dev       # http://localhost:4321/writing/
+npm run build     # 构建 + Pagefind 索引 + 复制索引到 public/
 npm run preview   # 预览构建结果
-npm run check     # 类型检查
 ```
+
+> 搜索页需要先跑一次 `npm run build` 才有索引数据。
 
 ## 部署
 
-`.github/workflows/deploy.yml`：推送到 `main` → 构建 → 发布到 GitHub Pages。
+`.github/workflows/deploy.yml`：推送到 `main` → `npm run build` → 发布到 GitHub Pages。
 仓库的 Pages 设置需要选择 **GitHub Actions** 作为发布来源。
 
-站点本身是 `base: "/writing"` 的子路径站点，`site` 和 `base` 在 `astro.config.mjs` 与 `src/config.ts` 各写了一份，改仓库名时两处都要同步。
+站点是子路径站点（`base: "/writing"`），所以 `astro.config.ts` 里的 `site` 是域名根，`astro-paper.config.ts` 里的 `site.url` 是含子路径的公开地址，改仓库名时两处都要同步。
+
+## 主题
+
+视觉与组件来自 [AstroPaper](https://github.com/satnaing/astro-paper)（MIT，© 2023 Sat Naing），在此基础上的改动：
+
+- 单 URL 树 + 由 frontmatter `lang` 驱动的页面语言（原主题为单语言）
+- `kind` 字段与列表页的长文/笔记徽标、语言徽标
+- `translationKey` 中英互链
+- KaTeX 公式支持
+- 中文字体回退与中文排版行高
+- 部署到 GitHub Pages 子路径（`/writing`）
+- Pagefind 搜索界面中文化
 
 ## License
 

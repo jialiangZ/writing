@@ -1,0 +1,23 @@
+---
+import { localeUrl } from "../lib/urls";
+
+const target = localeUrl("zh");
+---
+
+<!doctype html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <link rel="canonical" href={target} />
+    <title>Jialiang Zhang · Writing</title>
+    <script is:inline define:vars={{ target }}>
+      window.location.replace(target);
+    </script>
+  </head>
+  <body>
+    <p>正在跳转到 <a href={target}>中文版写作站</a> …</p>
+    <p>Redirecting to <a href={target}>the writing site</a> …</p>
+  </body>
+</html>

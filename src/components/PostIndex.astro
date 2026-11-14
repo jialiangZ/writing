@@ -1,0 +1,65 @@
+---
+import Base from "../layouts/Base.astro";
+import PostCard from "./PostCard.astro";
+import { ui, type Locale } from "../i18n/ui";
+import { getPosts, postsByKind } from "../lib/posts";
+import { localeUrl, tagsUrl } from "../lib/urls";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = ui[locale];
+
+const posts = await getPosts(locale);
+const longform = postsByKind(posts, "longform");
+const notes = postsByKind(posts, "note");
+const other: Locale = locale === "zh" ? "en" : "zh";
+const alternates = [{ locale: other, href: localeUrl(other) }];
+---
+
+<Base
+  title={t.siteTitle}
+  description={t.tagline}
+  locale={locale}
+  canonical={localeUrl(locale)}
+  alternates={alternates}
+>
+  <h1 class="page-title">{t.siteTitle}</h1>
+  <p class="page-subtitle">
+    {t.tagline} · <a href={tagsUrl(locale)}>{t.nav.tags}</a>
+  </p>
+
+  {
+    longform.length > 0 && (
+      <>
+        <h2 class="section-title">
+          {t.sections.longform} <span class="count">{longform.length}</span>
+        </h2>
+        <ul class="post-list">
+          {longform.map((post) => (
+            <PostCard post={post} locale={locale} />
+          ))}
+        </ul>
+      </>
+    )
+  }
+
+  {
+    notes.length > 0 && (
+      <>
+        <h2 class="section-title">
+          {t.sections.note} <span class="count">{notes.length}</span>
+        </h2>
+        <ul class="post-list">
+          {notes.map((post) => (
+            <PostCard post={post} locale={locale} />
+          ))}
+        </ul>
+      </>
+    )
+  }
+
+  {posts.length === 0 && <p class="empty">{t.meta.empty}</p>}
+</Base>

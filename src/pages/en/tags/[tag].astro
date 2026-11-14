@@ -1,0 +1,16 @@
+---
+import TagView from "../../../components/TagView.astro";
+import { getTags } from "../../../lib/posts";
+
+export async function getStaticPaths() {
+  const tags = await getTags("en");
+  return tags.map((tag) => ({
+    params: { tag: tag.slug },
+    props: { tag: tag.slug },
+  }));
+}
+
+const { tag } = Astro.props;
+---
+
+<TagView locale="en" tag={tag} />

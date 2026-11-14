@@ -1,0 +1,44 @@
+---
+import Base from "../layouts/Base.astro";
+import { tagLabel } from "../i18n/tags";
+import { ui, type Locale } from "../i18n/ui";
+import { getTags } from "../lib/posts";
+import { localeUrl, tagUrl, tagsUrl } from "../lib/urls";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = ui[locale];
+const tags = await getTags(locale);
+const other: Locale = locale === "zh" ? "en" : "zh";
+const alternates = [{ locale: other, href: tagsUrl(other) }];
+---
+
+<Base
+  title={`${t.nav.tags} · ${t.siteTitle}`}
+  description={t.tagline}
+  locale={locale}
+  canonical={tagsUrl(locale)}
+  alternates={alternates}
+>
+  <h1 class="page-title">{t.nav.tags}</h1>
+  <p class="page-subtitle"><a href={localeUrl(locale)}>← {t.nav.home}</a></p>
+
+  {
+    tags.length > 0 ? (
+      <ul class="tag-cloud">
+        {tags.map((tag) => (
+          <li>
+            <a class="tag" href={tagUrl(locale, tag.slug)}>
+              {tagLabel(tag.slug, locale)} <span class="count">({tag.count})</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="empty">{t.meta.noTags}</p>
+    )
+  }
+</Base>

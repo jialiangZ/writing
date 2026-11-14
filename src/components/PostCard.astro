@@ -1,0 +1,45 @@
+---
+import type { CollectionEntry } from "astro:content";
+import TagList from "./TagList.astro";
+import { ui, type Locale } from "../i18n/ui";
+import { readingStats } from "../lib/reading-time";
+import { postUrl } from "../lib/urls";
+import { slugOf } from "../lib/posts";
+
+interface Props {
+  post: CollectionEntry<"writing">;
+  locale: Locale;
+}
+
+const { post, locale } = Astro.props;
+const t = ui[locale];
+const { data } = post;
+const stats = readingStats(post.body);
+
+const dateFormat = locale === "zh" ? "zh-CN" : "en-US";
+const dateLabel = data.pubDate.toLocaleDateString(dateFormat, {
+  year: "numeric",
+  month: locale === "zh" ? "long" : "short",
+  day: "numeric",
+});
+
+const kindLabel = data.kind === "longform" ? t.sections.longform : t.sections.note;
+---
+
+<li class="post-item">
+  <h2 class="post-item__title">
+    <a href={postUrl(locale, slugOf(post))}>{data.title}</a>
+  </h2>
+
+  <div class="post-item__meta">
+    <span class:list={["badge", { "badge--longform": data.kind === "longform" }]}>
+      {kindLabel}
+    </span>
+    <time datetime={data.pubDate.toISOString()}>{dateLabel}</time>
+    <span>{stats.minutes} {t.meta.readTime}</span>
+  </div>
+
+  {data.description && <p class="post-item__description">{data.description}</p>}
+
+  {data.tags.length > 0 && <div class="post-header__tags"><TagList tags={data.tags} locale={locale} /></div>}
+</li>

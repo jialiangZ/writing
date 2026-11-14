@@ -8,7 +8,7 @@ import IconSearch from "@/assets/icons/IconSearch.svg";
 import IconMoon from "@/assets/icons/IconMoon.svg";
 import IconX from "@/assets/icons/IconX.svg";
 import LinkButton from "./LinkButton.astro";
-import { stripBase, stripLocale } from "@/utils/withBase";
+import { stripBase } from "@/utils/withBase";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
 
@@ -32,7 +32,7 @@ const pathWithoutTrailingSlash =
     ? relativePath.slice(0, -1)
     : relativePath;
 
-const currentPath = stripLocale(pathWithoutTrailingSlash, locale);
+const currentPath = pathWithoutTrailingSlash;
 
 const isActive = (path: string) => {
   const currentPathArray = currentPath.split("/").filter(p => p.trim());

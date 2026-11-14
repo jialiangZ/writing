@@ -47,11 +47,12 @@ const ogImage = `${SITE.origin}/images/og-card.png`;
     <link rel="canonical" href={canonicalUrl} />
 
     {
-      alternates.map((alternate) => (
+      // The page declares its own language plus every translation of it.
+      [{ locale, href: canonical }, ...alternates].map((entry) => (
         <link
           rel="alternate"
-          hreflang={localeTags[alternate.locale]}
-          href={absolute(alternate.href)}
+          hreflang={localeTags[entry.locale]}
+          href={absolute(entry.href)}
         />
       ))
     }

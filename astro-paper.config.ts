@@ -26,8 +26,7 @@ export default defineAstroPaperConfig({
     showArchives: true,
     showBackButton: true,
     editPost: {
-      enabled: true,
-      url: "https://github.com/jialiangZ/writing/edit/main/",
+      enabled: false,
     },
     search: "pagefind",
     toc: true,
@@ -38,7 +37,12 @@ export default defineAstroPaperConfig({
   ],
   shareLinks: [
     { name: "x", url: "https://x.com/intent/post?url=" },
+    { name: "facebook", url: "https://www.facebook.com/sharer/sharer.php?u=" },
     { name: "linkedin", url: "https://www.linkedin.com/sharing/share-offsite/?url=" },
+    { name: "telegram", url: "https://t.me/share/url?url=" },
+    { name: "whatsapp", url: "https://wa.me/?text=" },
+    { name: "weibo", url: "https://service.weibo.com/share/share.php?url=" },
+    { name: "qq", url: "https://connect.qq.com/widget/shareqq/index.html?url=" },
     { name: "mail", url: "mailto:?subject=See%20this%20post&body=" },
   ],
 });

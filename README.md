@@ -78,6 +78,12 @@ npm run preview   # 预览构建结果
 
 > 搜索页需要先跑一次 `npm run build` 才有索引数据。
 
+### 依赖版本
+
+- **Node 26**：CI 和本地开发都用这个版本。
+- **TypeScript 固定在 6.x**：`astro check` 目前还不支持 TypeScript 7，强行升级会直接报错。等 `@astrojs/check` 支持后（可改用实验性的 `@astrojs/ts-content-mapper`）再升。
+- **`overrides`**：`fflate`、`katex`、`postcss-selector-parser` 被上游锁在了有安全公告的旧版本上，这里强制提到修复版本，`npm audit` 因此是干净的。
+
 ## 部署
 
 `.github/workflows/deploy.yml`：推送到 `main` → `npm run build` → 发布到 GitHub Pages。

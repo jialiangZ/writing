@@ -6,14 +6,13 @@ import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
-import Socials from "@/components/Socials.astro";
 import Card from "@/components/Card.astro";
 import LinkButton from "@/components/LinkButton.astro";
 import { getSortedPosts } from "@/utils/getSortedPosts";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
 
-const { socials, posts: postsConfig } = config;
+const { posts: postsConfig } = config;
 
 const locale = Astro.currentLocale ?? config.site.lang;
 const t = useTranslations(locale);
@@ -54,33 +53,7 @@ const homePath = getRelativeLocaleUrl(config.site.lang, "");
 
       <p>
         流形，数学里的空间，也是流动的形状。这里记录一些关于 AI、气候系统与工程实践的观察。
-        中文与英文并存，每篇文章用自己的语言写成，界面也跟着文章走。
       </p>
-      <p class="mt-2">
-        个人主页在 <LinkButton
-          class="hover:text-accent underline decoration-dashed underline-offset-4"
-          href="https://jialiangz.github.io/"
-        >
-          jialiangz.github.io
-        </LinkButton>，源码在{" "}
-        <LinkButton
-          class="hover:text-accent underline decoration-dashed underline-offset-4"
-          href="https://github.com/jialiangZ/writing"
-        >
-          GitHub
-        </LinkButton>{" "}
-        上。
-      </p>
-      {
-        socials.length > 0 && (
-          <div class="mt-4 flex max-sm:flex-col sm:items-center">
-            <div class="me-2 mb-1 whitespace-nowrap sm:mb-0">
-              {t.home.socialLinks}:
-            </div>
-            <Socials />
-          </div>
-        )
-      }
     </section>
 
     {

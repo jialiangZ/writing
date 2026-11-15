@@ -4,9 +4,9 @@ export default defineAstroPaperConfig({
   site: {
     // Public URL of the site, including the `/writing` sub-path.
     url: "https://jialiangz.github.io/writing/",
-    title: "写作 · Writing",
+    title: "流形 · Manifold",
     description:
-      "关于 AI、气候科学与流式多模态模型的一些思考。Notes on AI, climate science and streaming multimodal models.",
+      "关于 AI、气候系统与工程实践的一些笔记。Notes on AI, climate, and the craft of building things.",
     author: "Jialiang Zhang",
     profile: "https://jialiangz.github.io/",
     ogImage: "default-og.jpg",
@@ -34,7 +34,6 @@ export default defineAstroPaperConfig({
   },
   socials: [
     { name: "github", url: "https://github.com/jialiangZ" },
-    { name: "linkedin", url: "https://www.linkedin.com/in/jialiang-zhang-hku/" },
     { name: "mail", url: "mailto:zhangjia_liang@foxmail.com" },
   ],
   shareLinks: [

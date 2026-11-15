@@ -1,8 +1,8 @@
-# writing
+# 流形 · Manifold
 
-写作站：<https://jialiangz.github.io/writing/>
+个人站点：<https://jialiangz.github.io/writing/>
 
-个人主页在 [jialiangZ.github.io](https://github.com/jialiangZ/jialiangZ.github.io)。
+关于 AI、气候系统与工程实践的笔记。个人主页在 [jialiangZ.github.io](https://github.com/jialiangZ/jialiangZ.github.io)。
 
 ## 语言由内容决定
 
